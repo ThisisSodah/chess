@@ -4,18 +4,34 @@ import Chess from 'chess.js'
 
 const WHITE = 'w';
 const BLACK = 'b';
+const ORIENTATION_WHITE = "white";
+const ORIENTATION_BLACK = "black";
+export const PRIMARY_BUTTON_STYLE = "m-8 font-semibold text-white px-8 py-1 rounded-md shadow-inner transition duration-300 ease-in-out border-4 border-blue-200 bg-blue-500 hover:border-blue-900"
+export const SECONDARY_BUTTON_STYLE = "m-8 font-semibold text-blue-700 px-8 py-1 bg-blue-100 rounded-md shadow-inner transition duration-300 ease-in-out border-4 border-blue-200 hover:border-blue-700"
 
 export default function Game(props) {
-    const [fen, setFen] = React.useState("start")
+    const [fen, setFen] = React.useState("")
     const [turn, setTurn] = React.useState(WHITE)
     const [gameOver, setGameOver] = React.useState(false)
     const [player, setplayerSide] = React.useState(props.playerSide || WHITE)
-
     let chess = React.useRef(null);
 
+    React.useEffect(() =>{
+        if(props.start){
+            debugger
+            setFen("start")
+        }
+    }, [props.start])
+    console.log(props)
     React.useEffect(() => {
         chess.current = new Chess();
     }, [])
+
+    const isGameOver = () => {
+        if(chess.current.game_over()){
+            setGameOver(true)
+        }
+    }
 
     const onDrop = ({sourceSquare, targetSquare}) => {
         let move = chess.current.move({
@@ -51,20 +67,37 @@ export default function Game(props) {
                 setFen(chess.current.fen())
                 setTurn(chess.current.turn())
             }
-            
         }
     }
 
-    const isGameOver = () => {
-        if(chess.current.game_over()){
-            setGameOver(true)
-        }
+    const openMenu = () => {
+        debugger
+        chess.current.clear()
+        chess.current.reset()
+        setFen("")
+        props.openMenu()
     }
+
+    const renderFooter = () => {
+        return (
+            <div className="flex flex-row">
+                <button onClick={resetGame} className={PRIMARY_BUTTON_STYLE}>
+                    Reset
+                </button>
+                <button onClick={openMenu} className={SECONDARY_BUTTON_STYLE}>
+                    Open Menu
+                </button>
+            </div>
+        )
+    } 
 
     return (
-        <div className="container mx-auto flex justify-center items-center">
+        <div className="container mx-auto flex flex-col justify-center items-center">
+            {renderFooter()}
+            <div className="border-solid border-8 rounded-lg border-blue-900">
             <Chessboard 
-                position={fen} size={800} onDrop={onDrop}/>
+                position={fen} size={800} onDrop={onDrop} transitionDuration={400} darkSquareStyle={{backgroundColor: "#4338CA"}} lightSquareStyle={{backgroundColor: "#C7D2FE"}}/>
+            </div>
         </div>
     )
 }
