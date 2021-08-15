@@ -1,4 +1,4 @@
-import { DialogContent, DialogTitle } from '@material-ui/core'
+import { DialogContent } from '@material-ui/core'
 import React from 'react';
 import { PRIMARY_BUTTON_STYLE } from './Game';
 
