@@ -18,7 +18,6 @@ export default function Game(props) {
 
     React.useEffect(() =>{
         if(props.start){
-            debugger
             setFen("start")
         }
     }, [props.start])
@@ -71,7 +70,6 @@ export default function Game(props) {
     }
 
     const openMenu = () => {
-        debugger
         chess.current.clear()
         chess.current.reset()
         setFen("")
